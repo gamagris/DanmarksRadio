@@ -1,18 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DanmarksRadio.Managers;
+using DanmarksRadio.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DanmarksRadio.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class MusicRecordsController : ControllerBase
     {
+        MusicRecordsManager manager = new MusicRecordsManager();
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         // GET: api/<MusicRecordsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<MusicRecord>> Get()
         {
-            return new string[] { "value1", "value2" };
+            IEnumerable<MusicRecord> records = manager.GetAll();
+
+            if (!records.Any())
+                return NoContent();
+
+            return Ok(records);
         }
 
         // GET api/<MusicRecordsController>/5
